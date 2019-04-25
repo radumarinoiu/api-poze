@@ -5,7 +5,6 @@ import time
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from imgurpython import ImgurClient
-from sshtunnel import SSHTunnelForwarder
 
 # MongoDB Initialization
 MONGO_HOST = "localhost"
@@ -14,6 +13,7 @@ MONGO_USER = "devs"  # TODO: To be removed
 MONGO_PASS = "devs"  # TODO: To be removed
 
 ######################### TO BE REMOVED #########################
+# from sshtunnel import SSHTunnelForwarder
 # SSH_SERVER = SSHTunnelForwarder(("192.168.0.20", 5120), ssh_username=MONGO_USER, ssh_password=MONGO_PASS, remote_bind_address=("127.0.0.1", 27017))
 # SSH_SERVER.start()
 # MONGO_CLIENT = MongoClient("127.0.0.1", SSH_SERVER.local_bind_port)
