@@ -44,7 +44,7 @@ def create_album():
 @app.route("/albums/<album_id>", methods = ["DELETE"])
 def delete_album(album_id):
     if db.delete_album(album_id):
-        return jsonify([]), 200
+        return jsonify({}), 200
     return jsonify({}), 404
 
 @app.route("/albums/<album_id>/images", methods = ["GET"])
@@ -63,8 +63,8 @@ def add_images_to_album(album_id):
         return jsonify({}), 400
     # Checks
 
-    album_id = db.add_images_to_album(album_id, req_obj["images"])
-    return jsonify([album_id]), 200
+    db.add_images_to_album(album_id, req_obj["images"])
+    return jsonify({}), 200
 
 @app.route("/albums/<album_id>/images", methods = ["DELETE"])
 def remove_images_from_album(album_id):
@@ -75,8 +75,8 @@ def remove_images_from_album(album_id):
         return jsonify({}), 400
     # Checks
 
-    album_id = db.remove_images_from_album(album_id, req_obj["images"])
-    return jsonify([album_id]), 200
+    db.remove_images_from_album(album_id, req_obj["images"])
+    return jsonify({}), 200
         
 
 

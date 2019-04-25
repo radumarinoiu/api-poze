@@ -106,7 +106,7 @@ def add_images_to_album(album_id, image_ids):
         {"_id": ObjectId(album_id)},
         {"$set": {"images": album["images"], "modified_at": time.time()}},
         upsert=False)
-    return album_id
+    return True
 
 def remove_images_from_album(album_id, image_ids):
     album = MONGO_COLL_ALBUMS.find_one({"_id": ObjectId(album_id)})
