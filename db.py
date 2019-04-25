@@ -49,7 +49,7 @@ def get_all_images():
     return all_images
 
 def get_image(image_id):
-    image = MONGO_COLL_IMAGES.find({"_id": ObjectId(image_id)})
+    image = MONGO_COLL_IMAGES.find_one({"_id": ObjectId(image_id)})
     if image:
         image["_id"] = str(image["_id"])
         image.pop("deletehash")
