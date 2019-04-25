@@ -59,11 +59,11 @@ def add_images_to_album(album_id):
     req_obj = request.json
 
     # Checks
-    if not check_fields(req_obj, {"images": list}):
+    if not check_fields(req_obj, {"image_ids": list}):
         return jsonify({}), 400
     # Checks
 
-    db.add_images_to_album(album_id, req_obj["images"])
+    db.add_images_to_album(album_id, req_obj["image_ids"])
     return jsonify({}), 200
 
 @app.route("/albums/<album_id>/images", methods = ["DELETE"])
@@ -71,12 +71,19 @@ def remove_images_from_album(album_id):
     req_obj = request.json
 
     # Checks
-    if not check_fields(req_obj, {"images": list}):
+    if not check_fields(req_obj, {"image_ids": list}):
         return jsonify({}), 400
     # Checks
 
-    db.remove_images_from_album(album_id, req_obj["images"])
+    db.remove_images_from_album(album_id, req_obj["image_ids"])
     return jsonify({}), 200
+
+@app.route("/albums/<album_id>/images/<image_id>", methods = ["GET"])
+def get_image_from_album(album_id, image_id):  # Ik, it's wrong, idk rn
+    image = db.get_image(image_id)
+    if image:
+        return jsonify(image), 200
+    return jsonify({}), 404
         
 
 
@@ -97,11 +104,11 @@ def upload_images():
     req_obj = request.json()
 
     # Checks
-    if not check_fields(req_obj, {"images": list}):
+    if not check_fields(req_obj, {"image_paths": list}):
         return jsonify({}), 400
     # Checks
 
-    return jsonify(db.upload_images(req_obj["images"])), 200
+    return jsonify(db.upload_images(req_obj["image_paths"])), 200
 
 
 if __name__ == "__main__":
