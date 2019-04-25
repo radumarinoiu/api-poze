@@ -51,7 +51,6 @@ def get_all_images():
 def get_image(image_id):
     image = MONGO_COLL_IMAGES.find({"_id": ObjectId(image_id)})
     if image:
-        image = dict(image)
         image["_id"] = str(image["_id"])
         image.pop("deletehash")
         return image
