@@ -51,7 +51,7 @@ def delete_album(album_id):
 def get_images_from_album(album_id):
     image_list = db.get_images_from_album(album_id)
     if image_list is not None:
-        return jsonify(image_list, 200)
+        return jsonify(image_list), 200
     return jsonify({}), 404
 
 @app.route("/albums/<album_id>/images", methods = ["PUT"])
