@@ -42,13 +42,23 @@ def upload_images(images):
     return image_ids
 
 def get_all_images():
-    all_image_ids = []
-    for image in MONGO_COLL_IMAGES.find({}):
-        all_image_ids.append(str(image["_id"]))
-    return all_image_ids
+    all_images = list(MONGO_COLL_IMAGES.find({}))
+    for image in all_images:
+        image["_id"] = str(image["_id"])
+        image.pop("deletehash")
+    return all_images
 
-def get_image_link_by_id(image_id):
-    return MONGO_COLL_IMAGES.find_one({"_id": ObjectId(image_id)})["link"]
+def get_image(image_id):
+    image = MONGO_COLL_IMAGES.find({"_id": ObjectId(image_id)})
+    if image:
+        image = dict(image)
+        image["_id"] = str(image["_id"])
+        image.pop("deletehash")
+        return image
+    return None
+
+# def get_image_link_by_id(image_id):
+#     return MONGO_COLL_IMAGES.find_one({"_id": ObjectId(image_id)})["link"]
 
 
 # Album Functions
@@ -60,24 +70,37 @@ def get_all_albums():
 
 def get_album(album_id):
     album_obj = MONGO_COLL_ALBUMS.find_one({"_id": ObjectId(album_id)})
-    album_obj["_id"] = str(album_obj["_id"])
-    return album_obj
+    if album_obj:
+        album_obj["_id"] = str(album_obj["_id"])
+        return album_obj
+    return None
 
-def create_album(name, description="", image_ids=[]):
+def create_album(name, description, image_ids):
     return str(MONGO_COLL_ALBUMS.insert_one({"name": name, "description": description, "images": image_ids, "created_at": time.time(), "modified_at": time.time()}).inserted_id)
 
 def delete_album(album_id):
-    MONGO_COLL_ALBUMS.delete_one({"_id": ObjectId(album_id)})
-    return True
+    return MONGO_COLL_ALBUMS.delete_one({"_id": ObjectId(album_id)}).deleted_count
 
-def get_all_image_ids_from_album(album_id):
-    return MONGO_COLL_ALBUMS.find_one({"_id": ObjectId(album_id)})["images"]
+# def get_all_image_ids_from_album(album_id):
+#     album = MONGO_COLL_ALBUMS.find_one({"_id": ObjectId(album_id)})
+#     if album:
+#         return album["images"]
+#     return None
 
-def get_all_image_links_from_album(album_id):
-    image_ids_list = MONGO_COLL_ALBUMS.find_one({"_id": ObjectId(album_id)})["images"]
-    return [get_image_link_by_id(image_id) for image_id in image_ids_list]
+# def get_all_image_links_from_album(album_id):
+#     image_ids_list = get_all_image_ids_from_album(album_id)
+#     if image_ids_list is not None:
+#         return [get_image_link_by_id(image_id) for image_id in image_ids_list]
+#     return None
 
-def add_photos_to_album(album_id, image_ids=[]):
+def get_images_from_album(album_id):
+    album = MONGO_COLL_ALBUMS.find_one({"_id": ObjectId(album_id)})
+    if album:
+        image_ids_list = list(MONGO_COLL_ALBUMS.find_one({"_id": ObjectId(album_id)})["images"])
+        return [get_image(image_id) for image_id in image_ids_list]
+    return None
+
+def add_images_to_album(album_id, image_ids):
     album = MONGO_COLL_ALBUMS.find_one({"_id": ObjectId(album_id)})
     album["images"] += image_ids
     MONGO_COLL_ALBUMS.update(
@@ -86,7 +109,7 @@ def add_photos_to_album(album_id, image_ids=[]):
         upsert=False)
     return album_id
 
-def remove_photos_from_album(album_id, image_ids=[]):
+def remove_images_from_album(album_id, image_ids):
     album = MONGO_COLL_ALBUMS.find_one({"_id": ObjectId(album_id)})
     for image_id in image_ids:
         album["images"].remove(image_id)
