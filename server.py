@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route("/albums", methods = ["GET"])
 def get_all_albums():
-    return jsonify(db.get_all_albums(), 200)
+    return jsonify(db.get_all_albums()), 200
 
 if __name__ == "__main__":
     print "Starting webserver..."
