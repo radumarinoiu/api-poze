@@ -1,5 +1,6 @@
 import db
 import json
+import urllib
 
 from flask import Flask, request, jsonify, Response
 
@@ -106,9 +107,15 @@ def upload_images():
     # Checks
     if not check_fields(req_obj, {"image_paths": list}):
         return jsonify({}), 400
+
+    try:
+        urllib.urlopen(req_obj["image_paths"])
+        func_to_run = db.add_images_to_queue_by_url
+    except ValueError:
+        func_to_run = db.add_images_to_queue_by_path
     # Checks
 
-    return jsonify(db.upload_images(req_obj["image_paths"])), 200
+    return jsonify(func_to_run(req_obj["image_paths"])), 200
 
 
 if __name__ == "__main__":
