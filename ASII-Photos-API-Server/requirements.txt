@@ -1,0 +1,5 @@
+flask
+bson
+pymongo
+requests
+imgurpython
