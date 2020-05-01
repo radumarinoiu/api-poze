@@ -11,7 +11,7 @@ from bson.objectid import ObjectId
 from imgurpython import ImgurClient, helpers as imgur_helpers
 
 # Constants
-TEMP_STORAGE_FOLDER = r"D:\temp"
+TEMP_STORAGE_FOLDER = r"/temp"
 UPLOADS_PER_HOUR = 50
 
 # Generic Initialization
